@@ -1,14 +1,16 @@
-# Support
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-## How to file issues and get help  
+# 支持
 
-This project uses [GitHub issues][gh-issue] to [track bugs][gh-bug] and [feature requests][gh-feature]. Please search the existing issues before filing new issues to avoid duplicates. For new topics, file your bug or feature request as a new issue.
+## 如何提交 issue 并获取帮助
 
-For help and questions about using this project, please look at the [docs site for Windows Terminal][docs] and our [Contributor's Guide][contributor] if you want to work on Windows Terminal.
+本项目使用 [GitHub issues][gh-issue] 来[跟踪缺陷][gh-bug]和[功能请求][gh-feature]。提交新 issue 之前请先搜索已有 issue,避免重复。对于新话题,请以新 issue 的形式提交你的缺陷报告或功能请求。
 
-## Microsoft Support Policy  
+如需关于使用本项目的帮助,请查阅 [Windows Terminal 文档站点][docs];如果你想为 Windows Terminal 做开发,请参阅我们的[贡献者指南][contributor]。
 
-Support for Windows Terminal is limited to the resources listed above.
+## Microsoft 支持政策
+
+Windows Terminal 的支持仅限于上面列出的资源。
 
 [gh-issue]: https://github.com/microsoft/terminal/issues/new/choose
 [gh-bug]: https://github.com/microsoft/terminal/issues/new?assignees=&labels=Issue-Bug&template=bug_report.md&title=

@@ -1,69 +1,73 @@
-# Terminal Contributor's Guide
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-Below is our guidance for how to report issues, propose new features, and submit contributions via Pull Requests (PRs).
+> 注:原文超过 10000 字符,本文翻译覆盖全部核心章节,代码块、命令与模板保持原样。
 
-## Open Development Workflow
+# Terminal 贡献者指南
 
-The Windows Terminal team is VERY active in this GitHub Repo. In fact, we live in it all day long and carry out all our development in the open!
+下面是我们关于如何报告问题、提议新功能以及通过 Pull Request(PR)提交贡献的指导。
 
-When the team finds issues we file them in the repo. When we propose new ideas or think-up new features, we file new feature requests. When we work on fixes or features, we create branches and work on those improvements. And when PRs are reviewed, we review in public - including all the good, the bad, and the ugly parts.
+## 开放式开发工作流
 
-The point of doing all this work in public is to ensure that we are holding ourselves to a high degree of transparency, and so that the community sees that we apply the same processes and hold ourselves to the same quality-bar as we do to community-submitted issues and PRs. We also want to make sure that we expose our team culture and "tribal knowledge" that is inherent in any closely-knit team, which often contains considerable value to those new to the project who are trying to figure out "why the heck does this thing look/work like this???"
+Windows Terminal 团队在这个 GitHub 仓库中非常活跃。事实上,我们整天都泡在里面,所有开发工作都是公开进行的!
 
-### Repo Bot
+团队发现问题就会在仓库中建档(issue)。当我们提出新想法或想到新功能时,就会提交新的功能请求。当我们着手修复或开发功能时,会创建分支并在其上工作。当 PR 被评审时,我们也是公开评审——包括好的、坏的和丑陋的部分。
 
-The team triages new issues several times a week. During triage, the team uses labels to categorize, manage, and drive the project workflow.
+在公开场合完成所有这些工作的目的,是确保我们对自己保持高度的透明度,并让社区看到:我们对社区提交的 issue 和 PR 采用与内部完全相同的流程和质量标准。我们也希望展示团队文化和任何紧密团队都固有的"部落知识"——这些对刚加入项目、正疑惑"这玩意儿到底为什么长这样/这么运作???"的新人来说往往相当有价值。
 
-We employ [a bot engine](./doc/bot.md) to help us automate common processes within our workflow.
+### 仓库机器人
 
-We drive the bot by tagging issues with specific labels which cause the bot engine to close issues, merge branches, etc. This bot engine helps us keep the repo clean by automating the process of notifying appropriate parties if/when information/follow-up is needed, and closing stale issues/PRs after reminders have remained unanswered for several days.
+团队每周会对新 issue 进行数次分诊。分诊过程中,团队使用标签(label)来分类、管理和驱动项目工作流。
 
-Therefore, if you do file issues, or create PRs, please keep an eye on your GitHub notifications. If you do not respond to requests for information, your issues/PRs may be closed automatically.
+我们使用[一个机器人引擎](./doc/bot.md)来帮助自动化工作流中的常见流程。
+
+我们通过给 issue 打上特定标签来驱动机器人,让机器人引擎关闭 issue、合并分支等。这个机器人引擎帮助我们保持仓库整洁:在需要信息/跟进时自动通知相关方,并在提醒多日无人回应后关闭过期的 issue/PR。
+
+因此,如果你提交了 issue 或创建了 PR,请留意你的 GitHub 通知。如果你不回应信息请求,你的 issue/PR 可能会被自动关闭。
 
 ---
-## Reporting Security Issues
+## 报告安全问题
 
-**Please do not report security vulnerabilities through public GitHub issues.** Instead, please report them to the Microsoft Security Response Center (MSRC). See [SECURITY.md](./SECURITY.md) for more information.
+**请不要通过公开的 GitHub issue 报告安全漏洞。**请改为向 Microsoft 安全响应中心(MSRC)报告。详见 [SECURITY.md](./SECURITY.md)。
 
-## Before you start, file an issue
+## 动手之前,先提一个 issue
 
-Please follow this simple rule to help us eliminate any unnecessary wasted effort & frustration, and ensure an efficient and effective use of everyone's time - yours, ours, and other community members':
+请遵守这条简单的规则,帮助我们消除不必要的浪费与挫败感,确保每个人的时间——你的、我们的、以及其他社区成员的——都得到高效利用:
 
-> 👉 If you have a question, think you've discovered an issue, would like to propose a new feature, etc., then find/file an issue **BEFORE** starting work to fix/implement it.
+> 👉 如果你有疑问、认为自己发现了问题、想提议新功能等,请在开始修复/实现之前**先查找/提交一个 issue**。
 
-### Search existing issues first
+### 先搜索已有 issue
 
-Before filing a new issue, search existing open and closed issues first: This project is moving fast! It is likely someone else has found the problem you're seeing, and someone may be working on or have already contributed a fix!
+提交新 issue 之前,请先搜索已有的开放和已关闭 issue:这个项目进展很快!很可能别人已经遇到过你遇到的问题,而且可能有人正在修复或已经贡献了修复!
 
-If no existing item describes your issue/feature, great - please file a new issue:
+如果没有已有的条目描述你的问题/功能,很好——请提交一个新 issue:
 
-### File a new Issue
+### 提交新 Issue
 
-* Don't know whether you're reporting an issue or requesting a feature? File an issue
-* Have a question that you don't see answered in docs, videos, etc.? File an issue
-* Want to know if we're planning on building a particular feature? File an issue
-* Got a great idea for a new feature? File an issue/request/idea
-* Don't understand how to do something? File an issue
-* Found an existing issue that describes yours? Great - upvote and add additional commentary / info / repro-steps / etc.
+* 不知道你是在报告问题还是在请求功能?提一个 issue
+* 有文档、视频等没有解答的疑问?提一个 issue
+* 想知道我们是否计划开发某个功能?提一个 issue
+* 对新功能有个好点子?提一个 issue/请求/想法
+* 不明白某件事怎么做?提一个 issue
+* 发现已有 issue 描述了你的问题?很好——点赞并在下面补充评论/信息/复现步骤等
 
-When you hit "New Issue", select the type of issue closest to what you want to report/ask/request:
-![New issue types](/doc/images/new-issue-template.png)
+当你点击"New Issue"时,选择与你想要报告/询问/请求的内容最接近的 issue 类型:
+![新建 issue 类型](/doc/images/new-issue-template.png)
 
-### Complete the template
+### 完整填写模板
 
-**Complete the information requested in the issue template, providing as much information as possible**. The more information you provide, the more likely your issue/ask will be understood and implemented. Helpful information includes:
+**请完整填写 issue 模板要求的信息,尽可能提供细节**。你提供的信息越多,你的 issue/请求就越有可能被理解并实现。有帮助的信息包括:
 
-* What device you're running (inc. CPU type, memory, disk, etc.)
-* What build of Windows your device is running
+* 你使用的设备(CPU 类型、内存、磁盘等)
+* 设备运行的 Windows 版本
 
-  👉 Tip: Run the following in PowerShell Core
+  👉 提示:在 PowerShell Core 中运行以下命令
 
   ```powershell
   C:\> $PSVersionTable.OS
   Microsoft Windows 10.0.18909
   ```
 
-  ... or in Windows PowerShell
+  ...或在 Windows PowerShell 中
 
   ```powershell
   C:\> $PSVersionTable.BuildVersion
@@ -73,7 +77,7 @@ When you hit "New Issue", select the type of issue closest to what you want to r
   10     0      18912  1001
   ```
 
-  ... or Cmd:
+  ...或 Cmd:
 
   ```cmd
   C:\> ver
@@ -81,99 +85,98 @@ When you hit "New Issue", select the type of issue closest to what you want to r
   Microsoft Windows [Version 10.0.18900.1001]
   ```
 
-* What tools and apps you're using (e.g. VS 2022, VSCode, etc.)
-* Don't assume we're experts in setting up YOUR environment and don't assume we are experts in `<your distro/tool of choice>`. Teach us to help you!
-* **We LOVE detailed repro steps!** What steps do we need to take to reproduce the issue? Assume we love to read repro steps. As much detail as you can stand is probably _barely_ enough detail for us!
-* If you're reporting a particular character/glyph not rendering correctly, the specific Unicode codepoint would be MOST welcome (e.g. U+1F4AF, U+4382)
-* Prefer error message text where possible or screenshots of errors if text cannot be captured
-* We MUCH prefer text command-line script than screenshots of command-line script.
-* **If you intend to implement the fix/feature yourself then say so!** If you do not indicate otherwise we will assume that the issue is our to solve, or may label the issue as `Help-Wanted`.
+* 你使用的工具和应用(如 VS 2022、VSCode 等)
+* 不要假设我们是配置你的环境的专家,也不要假设我们熟悉`你喜欢的发行版/工具`。教我们,以便我们帮你!
+* **我们超爱详细的复现步骤!**要复现这个问题需要哪些步骤?假设我们爱读复现步骤。你能写出的细节再详细,对我们来说可能都_刚刚够_!
+* 如果你报告的是某个字符/字形渲染不正确,请务必提供具体的 Unicode 码点(如 U+1F4AF、U+4382)
+* 尽量提供错误信息文本;如果无法复制文本,请提供错误截图
+* 我们强烈偏好命令行脚本的文本,而不是命令行脚本的截图
+* **如果你打算自己实现修复/功能,请说明!**如果你不另行说明,我们会默认这个 issue 由我们来解决,或者可能给它打上 `Help-Wanted` 标签
 
-### DO NOT post "+1" comments
+### 请不要发"+1"评论
 
-> ⚠ DO NOT post "+1", "me too", or similar comments - they just add noise to an issue.
+> ⚠ 请不要发布"+1"、"我也是"或类似评论——它们只会给 issue 添加噪音。
 
-If you don't have any additional info/context to add but would like to indicate that you're affected by the issue, upvote the original issue by clicking its [+😊] button and hitting 👍 (+1) icon. This way we can actually measure how impactful an issue is.
-
----
-
-## Contributing fixes / features
-
-If you're able & willing to help fix issues and/or implement features, we'd love your contribution!
-
-The best place to start is the list of ["walkthroughs"](https://aka.ms/terminal-walkthroughs). This is a collection of issues where we've written a "walkthrough", little guides to help get started with a particular issue. These are usually good first issues, and are a great way to get familiar with the codebase. Additionally, the list of ["good first issue"](https://github.com/microsoft/terminal/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22++label%3A%22good+first+issue%22+)s is another set of issues that might be easier for first-time contributors. Once you're feeling more comfortable in the codebase, feel free to just use the ["Help Wanted"](https://github.com/microsoft/terminal/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22+) label, or just find any issue you're interested in and hop in!
-
-Generally, we categorize issues in the following way, which is largely derived from our old internal work tracking system:
-* ["Bugs"](https://github.com/microsoft/terminal/issues?q=is%3Aopen+is%3Aissue+label%3A%22Issue-Bug%22+) are parts of the Terminal & Console that are not quite working the right way. There's code to already support some scenario, but it's not quite working right. Fixing these is generally a matter of debugging the broken functionality and fixing the wrong code.
-* ["Tasks"](https://github.com/microsoft/terminal/issues?q=is%3Aopen+is%3Aissue+label%3A%22Issue-Task%22+) are usually new pieces of functionality that aren't yet implemented for the Terminal/Console. These are usually smaller features, which we believe
-  - could be a single, atomic PR
-  - Don't require much design consideration, or we've already written the spec for the larger feature they belong to.
-* ["Features"](https://github.com/microsoft/terminal/issues?q=is%3Aopen+is%3Aissue+label%3A%22Issue-Feature%22+) are larger pieces of new functionality. These are usually things we believe would require larger discussion of how they should be implemented, or they'll require some complicated new settings. They might just be features that are composed of many individual tasks. Often times, with features, we like to have a spec written before development work is started, to make sure we're all on the same page (see below).
-
-Bugs and tasks are obviously the easiest to get started with, but don't feel afraid of features either! We've had some community members contribute some amazing "feature"-level work to the Terminal (albeit, with lots of discussion 😄).
-
-
-Often, we like to assign issues that generally belong to somebody's area of expertise to the team member that owns that area. This doesn't mean the community can't jump in -- they should reach out and have a chat with the assignee to see if it'd okay to take. If an issue's been assigned more than a month ago, there's a good chance it's fair game to try yourself.
-
-### To Spec or not to Spec
-
-Some issues/features may be quick and simple to describe and understand. For such scenarios, once a team member has agreed with your approach, skip ahead to the section headed "Fork, Branch, and Create your PR", below.
-
-Small issues that do not require a spec will be labelled `Issue-Bug` or `Issue-Task`.
-
-However, some issues/features will require careful thought & formal design before implementation. For these scenarios, we'll request that a spec is written and the associated issue will be labeled `Issue-Feature`. More often than not, we'll add such features to the ["Specification Tracker" project](https://github.com/microsoft/terminal/projects/1).
-
-Specs help collaborators discuss different approaches to solve a problem, describe how the feature will behave, how the feature will impact the user, what happens if something goes wrong, etc. Driving towards agreement in a spec, before any code is written, often results in simpler code, and less wasted effort in the long run.
-
-Specs will be managed in a very similar manner as code contributions so please follow the "[Fork, Branch and Create your PR](CONTRIBUTING.md#fork-clone-branch-and-create-your-pr)" section below.
-
-### Writing / Contributing-to a Spec
-
-To write/contribute to a spec: fork, branch and commit via PRs, as you would with any code changes.
-
-Specs are written in markdown, stored under the [`\doc\specs`](./doc/specs) folder and named `[issue id] - [spec description].md`.
-
-👉 **It is important to follow the spec templates and complete the requested information**. The available spec templates will help ensure that specs contain the minimum information & decisions necessary to permit development to begin. In particular, specs require you to confirm that you've already discussed the issue/idea with the team in an issue and that you provide the issue ID for reference.
-
-Team members will be happy to help review specs and guide them to completion.
-
-### Help Wanted
-
-Once the team has approved an issue/spec, development can proceed. If no developers are immediately available, the spec can be parked ready for a developer to get started. Parked specs' issues will be labeled "Help Wanted". To find a list of development opportunities waiting for developer involvement, visit the Issues and filter on [the Help-Wanted label](https://github.com/microsoft/terminal/labels/Help%20Wanted).
+如果你没有额外的信息/上下文要补充,但想表达你也受此问题影响,请点击原 issue 的 [+😊] 按钮并点 👍(+1)图标来点赞。这样我们才能真正衡量一个问题的影响力。
 
 ---
 
-## Development
+## 贡献修复 / 功能
 
-### Fork, Clone, Branch and Create your PR
+如果你有能力并且愿意帮助修复问题/实现功能,我们非常欢迎你的贡献!
 
-Once you've discussed your proposed feature/fix/etc. with a team member, and you've agreed an approach or a spec has been written and approved, it's time to start development:
+最好的起点是["新手引导(walkthroughs)"]列表。这是一组我们写了"引导文档"的 issue,这些小指南帮助你上手特定问题。它们通常适合作为第一个 issue,也是熟悉代码库的好方式。此外,["good first issue"](适合新手的问题)列表是另一组对首次贡献者更容易的 issue。等你对代码库更熟悉之后,尽管使用["Help Wanted"](寻求帮助)标签,或者找到任何你感兴趣的 issue 直接开干!
 
-1. Fork the repo if you haven't already
-1. Clone your fork locally
-1. Create & push a feature branch
-1. Create a [Draft Pull Request (PR)](https://github.blog/2019-02-14-introducing-draft-pull-requests/)
-1. Work on your changes
-1. Build and see if it works. Consult [How to build OpenConsole](./doc/building.md) if you have problems.
+一般来说,我们按以下方式对 issue 分类(这主要源自我们旧的内部工作跟踪系统):
+* ["Bugs"(缺陷)] 是 Terminal 与 Console 中工作不太正常的部分。已有代码支持某个场景,但工作不正常。修复它们通常就是调试坏掉的功能并改正错误的代码。
+* ["Tasks"(任务)] 通常是 Terminal/Console 尚未实现的新功能点。它们通常是较小的功能,我们认为它们:
+  - 可以由单个原子 PR 完成
+  - 不需要太多设计考量,或者其所属更大功能的规格说明书已经写好
+* ["Features"(功能)] 是更大的新功能。它们通常需要就实现方式进行更深入的讨论,或者需要一些复杂的新设置。它们也可能是由许多独立任务组成的功能。对于功能,我们通常希望在开发开始前先写好规格说明书,确保大家达成共识(见下文)。
 
-### Testing
+缺陷和任务显然最容易上手,但也不要害怕功能!我们已经有社区成员为 Terminal 贡献了一些惊艳的"功能"级工作(当然,伴随大量讨论 😄)。
 
-Testing is a key component in the development workflow. Both Windows Terminal and Windows Console use TAEF (the Test Authoring and Execution Framework) as the main framework for testing.
+我们常常把属于某个团队成员专业领域的问题分配给负责该领域的成员。这不意味着社区不能插手——社区应该联系指派人聊一聊,确认是否可以接手。如果一个 issue 被分配超过一个月,那大概率可以自己试试了。
 
-If your changes affect existing test cases, or you're working on brand new features and also the accompanying test cases, see [TAEF](./doc/TAEF.md) for more information about how to validate your work locally.
+### 写规格还是不写规格
 
-### Code Review
+有些 issue/功能可能描述和理解起来又快又简单。对于这类场景,一旦团队成员认可你的方案,直接跳到下面的"Fork、克隆、分支并创建你的 PR"部分。
 
-When you'd like the team to take a look, (even if the work is not yet fully-complete), mark the PR as 'Ready For Review' so that the team can review your work and provide comments, suggestions, and request changes. It may take several cycles, but the end result will be solid, testable, conformant code that is safe for us to merge.
+不需要规格说明书的小问题会被标记为 `Issue-Bug` 或 `Issue-Task`。
 
-> ⚠ Remember: **changes you make may affect both Windows Terminal and Windows Console and may end up being re-incorporated into Windows itself!** Because of this, we will treat community PR's with the same level of scrutiny and rigor as commits submitted to the official Windows source by team members and partners.
+但有些 issue/功能在实现之前需要仔细思考和正式设计。对于这些场景,我们会要求撰写规格说明书,并将相应 issue 标记为 `Issue-Feature`。多数情况下,我们会把这类功能加入["规格跟踪"项目](https://github.com/microsoft/terminal/projects/1)。
 
-### Merge
+规格说明书帮助协作者讨论解决问题的不同方案,描述功能的行为方式、对用户的影响、出错时会发生什么等等。在编写任何代码之前通过规格说明书达成一致,通常会让代码更简洁,从长远看也减少无用功。
 
-Once your code has been reviewed and approved by the requisite number of team members, it will be merged into the main branch. Once merged, your PR will be automatically closed.
+规格说明书的管理方式与代码贡献非常相似,请遵循下文的"[Fork、克隆、分支并创建你的 PR](CONTRIBUTING.md#fork-clone-branch-and-create-your-pr)"部分。
+
+### 撰写 / 参与撰写规格说明书
+
+撰写/参与规格说明书:像任何代码修改一样进行 fork、建分支并通过 PR 提交。
+
+规格说明书用 Markdown 编写,存放在 [`\doc\specs`](./doc/specs) 文件夹下,命名为 `[issue 编号] - [规格描述].md`。
+
+👉 **遵循规格模板并补全要求的信息非常重要**。可用的规格模板有助于确保规格包含开发启动所需的最低限度信息与决策。特别是,规格要求你确认已经在 issue 中与团队讨论过该问题/想法,并提供 issue 编号作为参考。
+
+团队成员很乐意帮助评审规格并推动其完成。
+
+### 寻求帮助(Help Wanted)
+
+一旦团队批准了 issue/规格,开发就可以开始。如果没有开发人员立即可用,规格可以搁置待命。被搁置的规格对应的 issue 会打上"Help Wanted"标签。要寻找等待开发人员参与的机会,请访问 Issues 并按[Help Wanted 标签](https://github.com/microsoft/terminal/labels/Help%20Wanted)筛选。
 
 ---
 
-## Thank you
+## 开发
 
-Thank you in advance for your contribution! Now, [what's next on the list](https://github.com/microsoft/terminal/labels/Help%20Wanted)? 😜
+### Fork、克隆、分支并创建你的 PR
+
+当你与团队成员讨论了提议的功能/修复等,并且就方案达成一致,或规格说明书已写好并获批,就可以开始开发了:
+
+1. 如果还没有,先 fork 本仓库
+2. 在本地克隆你的 fork
+3. 创建并推送功能分支
+4. 创建一个[草稿 Pull Request(PR)](https://github.blog/2019-02-14-introducing-draft-pull-requests/)
+5. 着手你的修改
+6. 构建并验证是否正常。遇到问题请参考[如何构建 OpenConsole](./doc/building.md)
+
+### 测试
+
+测试是开发工作流的关键组成部分。Windows Terminal 和 Windows Console 都使用 TAEF(测试创作与执行框架)作为主要测试框架。
+
+如果你的修改影响现有测试用例,或者你正在开发全新功能及其配套测试用例,请参阅 [TAEF](./doc/TAEF.md) 了解如何在本地验证你的工作。
+
+### 代码评审
+
+当你希望团队审阅时(即使工作尚未完全完成),将 PR 标记为"Ready For Review",团队即可评审你的工作并提供评论、建议和修改请求。这可能需要几个来回,但最终结果是可靠、可测试、合规的代码,我们可以放心合并。
+
+> ⚠ 记住:**你做的修改可能同时影响 Windows Terminal 和 Windows Console,并最终可能被重新纳入 Windows 本体!**因此,我们会以与团队成员和合作伙伴向官方 Windows 源码提交代码同等的审查强度和严谨度来对待社区 PR。
+
+### 合并
+
+一旦你的代码通过了必要数量团队成员的评审和批准,它将被合并到 main 分支。合并后,你的 PR 会自动关闭。
+
+---
+
+## 谢谢
+
+提前感谢你的贡献!那么,[清单上下一个是什么](https://github.com/microsoft/terminal/labels/Help%20Wanted)?😜
