@@ -1,5 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// 【中文注释】buffersize 工具说明:
+// 查询当前控制台屏幕缓冲区/视口(viewport)大小,然后用 VT 转义序列在
+// 缓冲区四周画一圈彩色边框(顶部 '-'、底部 '='、两侧 'L'/'R',
+// 每个格子颜色递进),用来直观验证缓冲区尺寸与重排行为。
 
 #include <windows.h>
 #include <wil/Common.h>
@@ -19,10 +24,11 @@
 
 using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
-// State
+// 【中文注释】全局状态:标准输入/输出句柄。
 HANDLE hOut;
 HANDLE hIn;
 
+// 【中文注释】拼接 CSI 转义序列:"ESC [" + seq。
 std::string csi(std::string seq)
 {
     std::string fullSeq = "\x1b[";
@@ -30,22 +36,32 @@ std::string csi(std::string seq)
     return fullSeq;
 }
 
+// 【中文注释】直接打印一个 CSI 序列。
 void printCSI(std::string seq)
 {
     printf("%s", csi(seq).c_str()); // save cursor
 }
 
+// 【中文注释】打印 CUP(光标定位)序列,把光标移到逻辑坐标 (x, y)
+// (VT 坐标从 1 开始,故各 +1)。
 void printCUP(int x, int y)
 {
     printf("\x1b[%d;%dH", y + 1, x + 1); // save cursor
 }
 
+// 【中文注释】设置 256 色背景色(bg 为色号)。
 void print256color(int bg)
 {
     printf("\x1b[48;5;%dm", bg); // save cursor
 }
 
 // bin\x64\Debug\buffersize.exe
+// 【中文注释】主入口:
+// 1. 开启 VT 处理(ENABLE_VIRTUAL_TERMINAL_PROCESSING)并关闭自动回车;
+// 2. 用 GetConsoleScreenBufferInfoEx 拿到视口宽高(注意:resize 事件本身
+//    并不携带我们想要的完整信息,所以这里主动查询);
+// 3. 保存光标位置,画顶部/底部边框,再逐行画左右边框,颜色逐格递进;
+// 4. 最后恢复光标位置与颜色属性。
 int __cdecl wmain(int /*argc*/, WCHAR* /*argv[]*/)
 {
     hOut = GetStdHandle(STD_OUTPUT_HANDLE);

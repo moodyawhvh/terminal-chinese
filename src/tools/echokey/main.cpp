@@ -1,5 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// 【中文注释】echokey 工具说明:
+// 该工具从控制台输入缓冲区读取按键事件(KEY_EVENT_RECORD / WINDOW_BUFFER_SIZE_RECORD),
+// 把每个按键的详细字段(是否按下、重复次数、虚拟键码、扫描码、字符、控制键状态)
+// 原样打印到屏幕,用于测试和验证终端的输入(尤其是 VT 输入模式)行为。
+// 按 Ctrl+D 退出。
+// 可用选项:-i 启用 VT 输入;-o 关闭 VT 输出;-w 读取窗口事件;
+//           -a 使用 ReadConsoleInputA(ANSI);--alt 使用备用缓冲区。
 
 #define DEFINE_CONSOLEV2_PROPERTIES
 
@@ -19,12 +27,15 @@ using namespace std;
 #include <wil/Common.h>
 #include <wil/Result.h>
 
+// 【中文注释】全局开关:是否启用 VT 输入/输出、是否读取窗口事件、
+// 是否使用备用缓冲区、是否使用 ANSI(A)版 API。
 bool gVtInput = false;
 bool gVtOutput = true;
 bool gWindowInput = false;
 bool gUseAltBuffer = false;
 bool gUseAscii = false;
 
+// 【中文注释】主循环退出标志:收到 Ctrl+D 时置位。
 bool gExitRequested = false;
 
 HANDLE g_hOut = INVALID_HANDLE_VALUE;
@@ -32,6 +43,8 @@ HANDLE g_hIn = INVALID_HANDLE_VALUE;
 
 static const char CTRL_D = 0x4;
 
+// 【中文注释】拼接并输出一个 CSI 序列(ESC '[' + seq)。
+// 若 VT 输出被关闭(-o),则直接丢弃,不打印任何转义序列。
 void csi(string seq)
 {
     if (!gVtOutput)
@@ -53,6 +66,9 @@ void useMainBuffer()
     csi("?1049l");
 }
 
+// 【中文注释】把字符转成可打印形式(两个字符宽):
+// ESC 打成 "^[",Ctrl+C 打成 "^C",\0 \r \n \t \b 打成 "\0" 等转义写法,
+// 其余字符后补一个空格,保证屏幕上每个字符占两列,便于阅读。
 void toPrintableBufferA(char c, char* printBuffer, int* printCch)
 {
     if (c == '\x1b')
@@ -112,6 +128,7 @@ void toPrintableBufferA(char c, char* printBuffer, int* printCch)
         *printCch = 2;
     }
 }
+// 【中文注释】toPrintableBufferA 的宽字符(Unicode)版本,逻辑完全一致。
 void toPrintableBufferW(wchar_t c, wchar_t* printBuffer, int* printCch)
 {
     if (c == L'\x1b')
@@ -172,6 +189,8 @@ void toPrintableBufferW(wchar_t c, wchar_t* printBuffer, int* printCch)
     }
 }
 
+// 【中文注释】ANSI 版按键事件处理:打印按键全部字段;
+// 松开(bKeyDown=0)的按键用灰色打印以示区分;收到 Ctrl+D 时请求退出。
 void handleKeyEventA(KEY_EVENT_RECORD keyEvent)
 {
     char printBuffer[3];
@@ -204,6 +223,7 @@ void handleKeyEventA(KEY_EVENT_RECORD keyEvent)
     }
 }
 
+// 【中文注释】Unicode 版按键事件处理,逻辑与 ANSI 版一致,读取 uChar.UnicodeChar。
 void handleKeyEventW(KEY_EVENT_RECORD keyEvent)
 {
     wchar_t printBuffer[3];
@@ -236,6 +256,8 @@ void handleKeyEventW(KEY_EVENT_RECORD keyEvent)
     }
 }
 
+// 【中文注释】窗口缓冲区大小变化事件:打印新缓冲区尺寸,
+// 并查询 CONSOLE_SCREEN_BUFFER_INFOEX 得到当前视口的位置与宽高。
 void handleWindowEvent(WINDOW_BUFFER_SIZE_RECORD windowEvent)
 {
     SHORT bufferWidth = windowEvent.dwSize.X;
@@ -262,6 +284,8 @@ void handleWindowEvent(WINDOW_BUFFER_SIZE_RECORD windowEvent)
     }
 }
 
+// 【中文注释】Ctrl 处理器:吞掉 Ctrl+C / Ctrl+Break,避免工具被直接中断,
+// 让 Ctrl+D 成为唯一退出方式。
 BOOL WINAPI CtrlHandler(DWORD fdwCtrlType)
 {
     switch (fdwCtrlType)
@@ -275,6 +299,7 @@ BOOL WINAPI CtrlHandler(DWORD fdwCtrlType)
     return false;
 }
 
+// 【中文注释】打印用法帮助。
 void usage()
 {
     wprintf(L"usage: echokey [options]\n");
@@ -287,6 +312,9 @@ void usage()
     wprintf(L"\t-?: print this help message\n");
 }
 
+// 【中文注释】主入口:解析命令行参数 → 保存原始控制台模式 →
+// 按选项设置 VT 输入/输出、窗口输入等标志位 → 进入读取循环逐条处理
+// INPUT_RECORD → 退出时恢复备用缓冲区与原始控制台模式。
 int __cdecl wmain(int argc, wchar_t* argv[])
 {
     gVtInput = false;
