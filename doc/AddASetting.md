@@ -1,40 +1,41 @@
-# Adding a Settings Property
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-1. Add to wincon.w
-    * THIS IS NOT IN OPENCONSOLE. Make sure you update
-      `.../console/published/wincon.w` in the OS repo when you submit the PR.
-      The branch won't build without it.
-    * For now, you can update winconp.h with your consumable changes.
-    * Define registry name (ex: `CONSOLE_REGISTRY_CURSORCOLOR`)
-    * Add the setting to `CONSOLE_STATE_INFO`.
-    * Define the property key ID and the property key itself.
-        - Yes, the large majority of the `DEFINE_PROPERTYKEY` defs are the same, it's only the last byte of the guid that changes.
+# 添加一个设置属性
 
-2. Add matching fields to Settings.hpp
-    - Add getters, setters, the whole drill.
+1. 添加到 wincon.w
+    * 这不在 OPENCONSOLE 里。提交 PR 时,务必同步更新 OS 仓库中的
+      `.../console/published/wincon.w`。
+      否则该分支无法构建。
+    * 目前,你可以先把可用的修改更新到 winconp.h。
+    * 定义注册表名(如 `CONSOLE_REGISTRY_CURSORCOLOR`)
+    * 把该设置加入 `CONSOLE_STATE_INFO`。
+    * 定义属性键 ID 和属性键本身。
+        - 是的,绝大多数 `DEFINE_PROPERTYKEY` 定义都是一样的,只有 guid 的最后一个字节不同。
 
-3. Add to the propsheet
-    - We need to add it to *reading and writing* the registry from the propsheet, and *reading* the link from the propsheet. Yes, that's weird, but the propsheet is smart enough to re-use ShortcutSerialization::s_SetLinkValues, but not smart enough to do the same with RegistrySerialization.
+2. 在 Settings.hpp 中添加对应字段
+    - 添加 getter、setter,全套流程。
+
+3. 添加到属性表(propsheet)
+    - 我们需要在属性表中*读取和写入*注册表,并*读取*快捷方式。是的,这很怪:属性表聪明到会复用 ShortcutSerialization::s_SetLinkValues,却不够聪明对 RegistrySerialization 做同样的事。
     - `src/propsheet/registry.cpp`
-        -  `propsheet/registry.cpp@InitRegistryValues` should initialize the default value for the property.
-        -  `propsheet/registry.cpp@GetRegistryValues` should make sure to read the property from the registry.
+        -  `propsheet/registry.cpp@InitRegistryValues` 应初始化该属性的默认值。
+        -  `propsheet/registry.cpp@GetRegistryValues` 应确保从注册表读取该属性。
 
-4. Add the field to the propslib registry map.
+4. 把该字段加入 propslib 的注册表映射。
 
-5. Add the value to `ShortcutSerialization.cpp`
-    - Read the value in `ShortcutSerialization::s_PopulateV2Properties`
-    - Write the value in `ShortcutSerialization::s_SetLinkValues`
+5. 把该值加入 `ShortcutSerialization.cpp`
+    - 在 `ShortcutSerialization::s_PopulateV2Properties` 中读取该值
+    - 在 `ShortcutSerialization::s_SetLinkValues` 中写入该值
 
-6. Add the setting to `Menu::s_GetConsoleState`, and `Menu::s_PropertiesUpdate`
-Now, your new setting should be stored just like all the other properties.
+6. 把该设置加入 `Menu::s_GetConsoleState` 和 `Menu::s_PropertiesUpdate`
+现在,你的新设置应当与其他所有属性一样被存储了。
 
-7. Update the feature test properties to get add the setting as well
+7. 更新功能测试的属性,把该设置也加进去
     - `ft_uia/Common/NativeMethods.cs@WinConP`:
-        - `Wtypes.PROPERTYKEY PKEY_Console_`.
-        - `NT_CONSOLE_PROPS`.
+        - `Wtypes.PROPERTYKEY PKEY_Console_`。
+        - `NT_CONSOLE_PROPS`。
 
-8. Add the default value for the setting to `win32k-settings.man`
-    - If the setting shouldn't default to 0 or `nullptr`, then you'll need to set the default value of the setting in `win32k-settings.man`.
+8. 把该设置的默认值加入 `win32k-settings.man`
+    - 如果该设置不应默认为 0 或 `nullptr`,你需要在 `win32k-settings.man` 中设置它的默认值。
 
-9. Update `Settings::InitFromStateInfo` and `Settings::CreateConsoleStateInfo` to get/set the value in a CONSOLE_STATE_INFO appropriately.
-
+9. 更新 `Settings::InitFromStateInfo` 和 `Settings::CreateConsoleStateInfo`,在 CONSOLE_STATE_INFO 中正确读取/写入该值。

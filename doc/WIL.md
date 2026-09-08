@@ -1,27 +1,28 @@
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
+
 # Windows Implementation Library
 
-## Overview
-[Windows Implementation Library](https://github.com/Microsoft/wil), or WIL, is a header-only library created to help make working with the Windows API more predictable and (hopefully) bug free.
+## 概述
+[Windows Implementation Library](https://github.com/Microsoft/wil),简称 WIL,是一个纯头文件库,旨在让 Windows API 的使用更可预测、(希望)更少 Bug。
 
-A majority of functions are in either the `wil::` or `wistd::` namespace. `wistd::` is used for things that have an equivalent in STL's `std::` namespace but have some special functionality like being exception-free. Everything else is in `wil::` namespace.
+大多数函数位于 `wil::` 或 `wistd::` 命名空间。`wistd::` 用于那些在 STL 的 `std::` 命名空间中有对应物、但带有特殊功能(如无异常)的东西。其余都在 `wil::` 命名空间。
 
-The primary usages of WIL in our code so far are...
+目前为止,我们在代码中对 WIL 的主要用法有……
 
-### Smart Pointers ###
+### 智能指针 ###
 
-Inside [wil/resource.h](https://github.com/microsoft/wil/blob/master/include/wil/resource.h) are smart pointer like classes for many Windows OS resources like file handles, socket handles, process handles, and so on. They're of the form `wil::unique_handle` and call the appropriate/matching OS function (like `CloseHandle()` in this case) when they go out of scope.
+在 [wil/resource.h](https://github.com/microsoft/wil/blob/master/include/wil/resource.h) 中,为许多 Windows OS 资源提供了智能指针式的类,如文件句柄、套接字句柄、进程句柄等。它们形如 `wil::unique_handle`,在超出作用域时会调用相应/匹配的 OS 函数(这里是 `CloseHandle()`)。
 
-Another useful item is `wil::make_unique_nothrow()` which is analogous to `std::make_unique` (except without the exception which might help you integrate with existing exception-free code in the console.) This will return a `wistd::unique_ptr` (vs. a `std::unique_ptr`) which can be used in a similar manner.
+另一个实用的东西是 `wil::make_unique_nothrow()`,它类似于 `std::make_unique`(但没有异常,这有助于你与控制台中现存的免异常代码整合)。它返回 `wistd::unique_ptr`(而非 `std::unique_ptr`),用法类似。
 
-### Result Handling ###
+### 结果处理 ###
 
-To manage the various types of result codes that come back from Windows APIs, the file [wil/result.h](https://github.com/microsoft/wil/blob/master/include/wil/result.h) provides a wealth of macros that can help. 
+为了管理从 Windows API 返回的各类结果码,[wil/result.h](https://github.com/microsoft/wil/blob/master/include/wil/result.h) 提供了大量宏。
 
-As an example, the method `DuplicateHandle()` returns a `BOOL` value that is `FALSE` under failure and would like you to `GetLastError()` from the operating system to find out what the actual result code is. In this circumstance, you could use the macro `RETURN_IF_WIN32_BOOL_FALSE` to wrap the call to `DuplicateHandle()` which would automatically handle this pattern for you and return the `HRESULT` equivalent on failure.
+举例来说,`DuplicateHandle()` 返回一个 `BOOL` 值,失败时为 `FALSE`,并要求你从操作系统 `GetLastError()` 查询真实结果码。这种情况下,你可以用宏 `RETURN_IF_WIN32_BOOL_FALSE` 包装对 `DuplicateHandle()` 的调用,它会自动处理这个模式,并在失败时返回等价的 `HRESULT`。
 
-This leads to nice patterns where you can set up all resources in a function as protected by `std::unique_ptr` or the various `wil::` smart pointers and smart handles then `RETURN_IF_*` on every call to a Windows API and be guaranteed that your resources will be cleaned up appropriately under any failure case. Do note that this generally requires you to return an `HRESULT` as your return code and use out pointer parameters for return data. There are exceptions to this... read the header for more details. 
+由此形成了漂亮的模式:你可以把函数中的所有资源都交给 `std::unique_ptr` 或各种 `wil::` 智能指针/智能句柄保护,然后在每次调用 Windows API 时使用 `RETURN_IF_*`,即可保证任何失败情形下资源都会被正确清理。注意,这通常要求你以 `HRESULT` 作为返回码,并用出参指针返回数据。当然也有例外……详情请阅读头文件。
 
-The additional advantage to using this pattern is that failures at any point are logged to our global tracing/debugging channels to be viewed under the debugger output with the exact line number and function details for the error.
+使用这种模式的另一个好处是:任何时点的失败都会记录到我们的全局跟踪/调试通道,可在调试器输出中查看,并附带错误发生的确切行号和函数信息。
 
-Additionally, if you just want to make sure that a failure case is logged for debugging purposes, all of these macros have a `LOG_IF_*` equivalent that will simply log a failure and keep rolling.
-
+此外,如果你只是想确保失败情形被记录下来用于调试,所有这些宏都有对应的 `LOG_IF_*` 版本,只记录失败然后继续执行。

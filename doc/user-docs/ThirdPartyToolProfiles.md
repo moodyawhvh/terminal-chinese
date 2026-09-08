@@ -1,11 +1,13 @@
-# Adding profiles for third-party tools
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-This doc will hopefully provide a useful guide for adding profiles for common third-party tools to your
-[settings.json](https://docs.microsoft.com/en-us/windows/terminal/customize-settings/profile-settings) file.
+# 为第三方工具添加配置文件
+
+本文档旨在提供一份实用指南,帮助你在
+[settings.json](https://docs.microsoft.com/en-us/windows/terminal/customize-settings/profile-settings) 文件中为常见第三方工具添加配置文件(profile)。
 
 ## Anaconda
 
-Assuming that you've installed Anaconda into `%USERPROFILE%\Anaconda3`:
+假设你把 Anaconda 安装到了 `%USERPROFILE%\Anaconda3`:
 
 ```json
 {
@@ -18,7 +20,7 @@ Assuming that you've installed Anaconda into `%USERPROFILE%\Anaconda3`:
 
 ## cmder
 
-Assuming that you've installed cmder into `%CMDER_ROOT%`:
+假设你把 cmder 安装到了 `%CMDER_ROOT%`:
 
 ```json
 {
@@ -31,7 +33,7 @@ Assuming that you've installed cmder into `%CMDER_ROOT%`:
 
 ## Cygwin
 
-Assuming that you've installed Cygwin into `C:\Cygwin`:
+假设你把 Cygwin 安装到了 `C:\Cygwin`:
 
 ```json
 {
@@ -42,13 +44,11 @@ Assuming that you've installed Cygwin into `C:\Cygwin`:
 }
 ```
 
-Note that the starting directory of Cygwin is set as it is to make the path
-work. The default directory opened when starting Cygwin will be `$HOME` because
-of the `--login` flag.
+注意,Cygwin 的起始目录之所以这样设置是为了让路径生效。由于 `--login` 标志,Cygwin 启动时默认打开的目录将是 `$HOME`。
 
 ## Far Manager
 
-Assuming that you've installed Far into `c:\Program Files\Far Manager`:
+假设你把 Far 安装到了 `c:\Program Files\Far Manager`:
 
 ```json
 {
@@ -61,7 +61,7 @@ Assuming that you've installed Far into `c:\Program Files\Far Manager`:
 
 ## Git Bash
 
-Assuming that you've installed Git Bash into `C:\\Program Files\\Git`:
+假设你把 Git Bash 安装到了 `C:\\Program Files\\Git`:
 
 ```json
 {
@@ -74,7 +74,7 @@ Assuming that you've installed Git Bash into `C:\\Program Files\\Git`:
 
 ## Git Bash (WOW64)
 
-Assuming that you've installed Git Bash into `C:\\Program Files (x86)\\Git`:
+假设你把 Git Bash 安装到了 `C:\\Program Files (x86)\\Git`:
 
 ```json
 {
@@ -87,7 +87,7 @@ Assuming that you've installed Git Bash into `C:\\Program Files (x86)\\Git`:
 
 ## MSYS2
 
-Assuming that you've installed MSYS2 into `C:\\msys64`:
+假设你把 MSYS2 安装到了 `C:\\msys64`:
 
 ```json
 {
@@ -98,11 +98,11 @@ Assuming that you've installed MSYS2 into `C:\\msys64`:
 }
 ```
 
-For more details, see [this page](https://www.msys2.org/docs/terminals/#windows-terminal) on the MSYS2 documentation.
+更多细节请参阅 MSYS2 文档中的[这一页](https://www.msys2.org/docs/terminals/#windows-terminal)。
 
-## Developer Command Prompt for Visual Studio
+## Visual Studio 开发人员命令提示
 
-Assuming that you've installed VS 2019 Professional:
+假设你安装了 VS 2019 Professional:
 
 ```json
 {
