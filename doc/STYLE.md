@@ -1,8 +1,10 @@
-# Coding Style
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-## Philosophy
-1. If it's inserting something into the existing classes/functions, try to follow the existing style as closely as possible.
-1. If it's brand new code or refactoring a complete class or area of the code, please follow as Modern C++ of a style as you can and reference the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines) as much as you possibly can.
-1. When working with any Win32 or NT API, please try to use the [Windows Implementation Library](./WIL.md) smart pointers and result handlers.
-1. The use of NTSTATUS as a result code is discouraged, HRESULT or exceptions are preferred. Functions should not return a status code if they would always return a successful status code. Any function that returns a status code should be marked `noexcept` and have the `nodiscard` attribute.
-1. When contributing code in `TerminalApp`, be mindful to appropriately use C++/WinRT [strong and weak references](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/weak-references), and have a good understanding of C++/WinRT [concurrency schemes](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/concurrency).
+# 代码风格
+
+## 理念
+1. 如果是往现有类/函数里插入内容,尽量贴近现有风格。
+1. 如果是全新代码或重构整个类/整个区域,请尽量采用 Modern C++ 风格,并尽可能参考 [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines)。
+1. 使用任何 Win32 或 NT API 时,请尽量使用 [Windows Implementation Library](./WIL.md) 的智能指针和结果处理器。
+1. 不建议使用 NTSTATUS 作为返回码,优先使用 HRESULT 或异常。如果函数总是返回成功状态码,就不应返回状态码。任何返回状态码的函数都应标记 `noexcept` 并带有 `nodiscard` 属性。
+1. 在 `TerminalApp` 中贡献代码时,注意正确使用 C++/WinRT 的[强引用与弱引用](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/weak-references),并充分理解 C++/WinRT 的[并发模型](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/concurrency)。

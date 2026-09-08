@@ -1,23 +1,26 @@
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-# How to build OpenConsole
+> 注:原文超过 10000 字符,本文翻译覆盖核心章节,命令、脚本与日志保持原样。
 
-This repository uses [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) for some of its dependencies. To make sure submodules are restored or updated, be sure to run the following prior to building:
+# 如何构建 OpenConsole
+
+本仓库的部分依赖使用 [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)。为确保子模块被还原或更新,构建前务必运行:
 
 ```shell
 git submodule update --init --recursive
 ```
 
-OpenConsole.slnx may be built from within Visual Studio or from the command-line using a set of convenience scripts & tools in the **/tools** directory:
+OpenConsole.slnx 可以在 Visual Studio 内构建,也可以用 **/tools** 目录中的一组便捷脚本和工具在命令行构建:
 
-When using Visual Studio, be sure to set up the path for code formatting. To download the required clang-format.exe file, follow one of the building instructions below and run:
+使用 Visual Studio 时,请务必设置代码格式化路径。要下载所需的 clang-format.exe 文件,先按下面的构建说明操作一次,然后运行:
 ```powershell
 Import-Module .\tools\OpenConsole.psm1
 Set-MsBuildDevEnvironment
 Get-Format
 ```
-After, go to Tools > Options > Text Editor > C++ > Formatting and check "Use custom clang-format.exe file" in Visual Studio and choose the clang-format.exe in the repository at /packages/clang-format.win-x86.10.0.0/tools/clang-format.exe by clicking "browse" right under the check box.
+之后,在 Visual Studio 中转到 Tools > Options > Text Editor > C++ > Formatting,勾选 "Use custom clang-format.exe file",并通过勾选框下方的"浏览"按钮选择仓库中的 /packages/clang-format.win-x86.10.0.0/tools/clang-format.exe。
 
-### Building in PowerShell
+### 在 PowerShell 中构建
 
 ```powershell
 Import-Module .\tools\OpenConsole.psm1
@@ -25,96 +28,96 @@ Set-MsBuildDevEnvironment
 Invoke-OpenConsoleBuild
 ```
 
-There are a few additional exported functions (look at their documentation for further details):
+还有几个额外的导出函数(详见各自文档):
 
-- `Invoke-OpenConsoleBuild` - builds the solution. Can be passed msbuild arguments.
-- `Invoke-OpenConsoleTests` - runs the various tests. Will run the unit tests by default.
-- `Start-OpenConsole` - starts Openconsole.exe from the output directory. x64 is run by default.
-- `Debug-OpenConsole` - starts Openconsole.exe and attaches it to the default debugger. x64 is run by default.
-- `Invoke-CodeFormat` - uses clang-format to format all c++ files to match our coding style.
+- `Invoke-OpenConsoleBuild` - 构建解决方案。可传入 msbuild 参数。
+- `Invoke-OpenConsoleTests` - 运行各类测试。默认运行单元测试。
+- `Start-OpenConsole` - 从输出目录启动 Openconsole.exe。默认运行 x64。
+- `Debug-OpenConsole` - 启动 Openconsole.exe 并附加默认调试器。默认运行 x64。
+- `Invoke-CodeFormat` - 使用 clang-format 将所有 C++ 文件格式化为我们要求的代码风格。
 
-### Building in Cmd
+### 在 Cmd 中构建
 
 ```shell
 .\tools\razzle.cmd
 bcz
 ```
 
-There are also scripts for running the tests:
-- `runut.cmd` - run the unit tests
-- `runft.cmd` - run the feature tests
-- `runuia.cmd` - run the UIA tests
-- `runformat` - uses clang-format to format all c++ files to match our coding style.
+也有运行测试的脚本:
+- `runut.cmd` - 运行单元测试
+- `runft.cmd` - 运行功能测试
+- `runuia.cmd` - 运行 UIA 测试
+- `runformat` - 使用 clang-format 将所有 C++ 文件格式化为我们要求的代码风格
 
-## Running & Debugging
+## 运行与调试
 
-To debug the Windows Terminal in VS, right click on `CascadiaPackage` (in the Solution Explorer) and go to properties. In the Debug menu, change "Application process" and "Background task process" to "Native Only".
+要在 VS 中调试 Windows Terminal,右键点击 `CascadiaPackage`(在解决方案资源管理器中)进入属性。在"调试"菜单中,把 "Application process" 和 "Background task process" 改为 "Native Only"。
 
-You should then be able to build & debug the Terminal project by hitting <kbd>F5</kbd>.
+然后你就可以按 <kbd>F5</kbd> 构建并调试 Terminal 项目了。
 
-> 👉 You will _not_ be able to launch the Terminal directly by running the WindowsTerminal.exe. For more details on why, see [#926](https://github.com/microsoft/terminal/issues/926), [#4043](https://github.com/microsoft/terminal/issues/4043)
+> 👉 你将_无法_直接运行 WindowsTerminal.exe 来启动 Terminal。原因详见 [#926](https://github.com/microsoft/terminal/issues/926)、[#4043](https://github.com/microsoft/terminal/issues/4043)
 
-## Configuration Types
+## 配置类型
 
-Openconsole has three configuration types:
+Openconsole 有三种配置类型:
 
 - Debug
 - Release
 - AuditMode
 
-AuditMode is an experimental mode that enables some additional static analysis from CppCoreCheck.
+AuditMode 是一种实验性模式,会启用 CppCoreCheck 的额外静态分析。
 
-## Updating Nuget package references - Globally versioned
-Most Nuget package references in this project are centralized in a single configuration so that there is a single canonical version for everything.  This canonical version is restored before builds by the build pipeline, environment initialization scripts, or Visual Studio (as appropriate).
+## 更新 Nuget 包引用 - 全局统一版本
+本项目的大多数 Nuget 包引用集中在一个配置里,使所有内容只有一个规范版本。这个规范版本会在构建前由构建管线、环境初始化脚本或 Visual Studio(视情况)还原。
 
-The canonical version numbers are defined in dep/nuget/packages.config.  That defines what will be downloaded by nuget.exe.  Most Nuget packages also have a .props and/or .targets file that must be imported by every project that consumes it.  Those import statements are consolidated in:
+规范版本号定义在 dep/nuget/packages.config 中,它决定了 nuget.exe 会下载什么。大多数 Nuget 包还带有 .props 和/或 .targets 文件,每个使用该包的项目都必须导入它们。这些导入语句统一放在:
 - src/common.nugetversions.props
 - src/common.nugetversions.targets
 
-When a globally managed version changes all three of those files must be changed in unison.
+当全局管理的版本变化时,上述三个文件必须同步修改。
 
-## Updating Nuget package references - Locally versioned
-Certain Nuget package references in this project, like `Microsoft.UI.Xaml`, must be updated outside of the Visual Studio NuGet package manager. This can be done using the snippet below.
-> Note that to run this snippet, you need to use WSL as the command uses `sed`.
-To update the version of a given package, use the following snippet
+## 更新 Nuget 包引用 - 本地版本
+本项目中的某些 Nuget 包引用(如 `Microsoft.UI.Xaml`)必须在 Visual Studio NuGet 包管理器之外更新。可以用下面的代码片段完成。
+> 注意:运行该片段需要使用 WSL,因为命令用到了 `sed`。
+更新某个包的版本,使用如下片段:
 
 `git grep -z -l $PackageName | xargs -0 sed -i -e 's/$OldVersionNumber/$NewVersionNumber/g'`
 
-where:
-- `$PackageName` is the name of the package, e.g. Microsoft.UI.Xaml
-- `$OldVersionNumber` is the version number currently used, e.g. 2.4.0-prerelease.200506002
-- `$NewVersionNumber` is the version number you want to migrate to, e.g. 2.5.0-prerelease.200812002
+其中:
+- `$PackageName` 是包名,例如 Microsoft.UI.Xaml
+- `$OldVersionNumber` 是当前使用的版本号,例如 2.4.0-prerelease.200506002
+- `$NewVersionNumber` 是你要迁移到的版本号,例如 2.5.0-prerelease.200812002
 
-Example usage:
+用法示例:
 
 `git grep -z -l Microsoft.UI.Xaml | xargs -0 sed -i -e 's/2.4.0-prerelease.200506002/2.5.0-prerelease.200812002/g'`
 
-## Using .nupkg files instead of downloaded Nuget packages
-If you want to use .nupkg files instead of the downloaded Nuget package, you can do this with the following steps:
+## 使用 .nupkg 文件代替下载的 Nuget 包
+如果你想用 .nupkg 文件代替下载的 Nuget 包,可以按以下步骤操作:
 
-1. Open the Nuget.config file and uncomment line 8 ("Static Package Dependencies")
-2. Create the folder /dep/packages
-3. Put your .nupkg files in /dep/packages
-4. If you are using different versions than those already being used, you need to update the references as well. How to do that is explained under "Updating Nuget package references".
+1. 打开 Nuget.config,取消第 8 行("Static Package Dependencies")的注释
+2. 创建文件夹 /dep/packages
+3. 把你的 .nupkg 文件放进 /dep/packages
+4. 如果你使用的版本与现有版本不同,还需要更新引用。方法见"更新 Nuget 包引用"一节。
 
 
-## Building the Terminal package from the commandline
+## 从命令行构建 Terminal 包
 
-The Terminal is bundled as an `.msix`, which is produced by the `CascadiaPackage.wapproj` project. To build that project from the commandline, you can run the following (from a window you've already run `tools\razzle.cmd` in):
+Terminal 被打包为 `.msix`,由 `CascadiaPackage.wapproj` 项目生成。要从命令行构建该项目,可以运行以下命令(在已经运行过 `tools\razzle.cmd` 的窗口中):
 
 ```cmd
 "%msbuild%" "%OPENCON%\OpenConsole.slnx" /p:Configuration=%_LAST_BUILD_CONF% /p:Platform=%ARCH% /p:AppxSymbolPackageEnabled=false /t:Terminal\CascadiaPackage /m
 ```
 
-This takes quite some time, and only generates an `msix`. It does not install the msix. To deploy the package:
+这一步耗时较长,而且只生成 `msix`,不会安装。要部署该包:
 
 ```powershell
-# If you haven't already:
+# 如果还没有:
 Import-Module .\tools\OpenConsole.psm1;
 Set-MsBuildDevEnvironment;
 
-# The Set-MsBuildDevEnvironment call is needed for finding the path to
-# makeappx. It also takes a little longer to run. If you're sticking in powershell, best to do that.
+# 调用 Set-MsBuildDevEnvironment 是为了找到 makeappx 的路径。
+# 它运行起来也稍慢。如果你打算一直待在 PowerShell 里,最好先执行它。
 
 Set-Location -Path src\cascadia\CascadiaPackage\AppPackages\CascadiaPackage_0.0.1.0_x64_Debug_Test;
 if ((Get-AppxPackage -Name 'WindowsTerminalDev*') -ne $null) {
@@ -125,24 +128,24 @@ makeappx unpack /v /o /p .\CascadiaPackage_0.0.1.0_x64_Debug.msix /d ..\loose\;
 Add-AppxPackage -Path ..\loose\AppxManifest.xml -Register -ForceUpdateFromAnyVersion -ForceApplicationShutdown
 ```
 
-Or the cmd.exe version:
+或者 cmd.exe 版本:
 ```cmd
-@rem razzle.cmd doesn't set:
+@rem razzle.cmd 不会设置:
 @rem set WindowsSdkDir=C:\Program Files (x86)\Windows Kits\10\
-@rem vsdevcmd.bat does a lot of logic to find that.
+@rem vsdevcmd.bat 有大量逻辑来找这个路径。
 @rem
-@rem I'm gonna hard code it below:
+@rem 下面我直接硬编码:
 
 powershell -Command Set-Location -Path %OPENCON%\src\cascadia\CascadiaPackage\AppPackages\CascadiaPackage_0.0.1.0_x64_Debug_Test;if ((Get-AppxPackage -Name 'WindowsTerminalDev*') -ne $null) { Remove-AppxPackage 'WindowsTerminalDev_0.0.1.0_x64__8wekyb3d8bbwe'};New-Item ..\loose -Type Directory -Force;C:\'Program Files (x86)'\'Windows Kits'\10\bin\10.0.19041.0\x64\makeappx unpack /v /o /p .\CascadiaPackage_0.0.1.0_x64_Debug.msix /d ..\Loose\;Add-AppxPackage -Path ..\loose\AppxManifest.xml -Register -ForceUpdateFromAnyVersion -ForceApplicationShutdown
 ```
 
-(yes, the cmd version is just calling powershell to do the powershell version. Too lazy to convert the rest by hand, I'm already copying from `.vscode\tasks.json`)
+(是的,cmd 版本就是调用 PowerShell 去执行 PowerShell 版本。懒得手动转换剩下的部分,反正我都是从 `.vscode\tasks.json` 复制的)
 
-Building the package from VS generates the loose layout to begin with, and then registers the loose manifest, skipping the msix stop. It's a lot faster than the commandline inner loop here, unfortunately.
+在 VS 中构建包一开始就会生成松散布局(loose layout),然后注册松散清单,跳过 msix 这一步。很遗憾,它比这里的命令行内循环快得多。
 
-### 2022 Update
+### 2022 更新
 
-The following command can be used to build the terminal package, and then deploy it.
+以下命令可用于构建 Terminal 包然后部署。
 
 ```cmd
 pushd %OPENCON%\src\cascadia\CascadiaPackage
@@ -151,50 +154,45 @@ bx
 popd
 ```
 
-The `bx` will build just the Terminal package, critically, populating the `CascadiaPackage.build.appxrecipe` file. Once that's been built, then the `DeployAppRecipe.exe` command can be used to deploy a loose layout in the same way that Visual Studio does.
+`bx` 只构建 Terminal 包,关键是它会生成 `CascadiaPackage.build.appxrecipe` 文件。构建完成后,就可以用 `DeployAppRecipe.exe` 以与 Visual Studio 相同的方式部署松散布局。
 
-Notably, this method of building the Terminal package can't leverage the FastUpToDate check in Visual Studio, so the builds end up being considerably slower for the whole package, as cppwinrt does a lot of work before confirming that it's up to date and doing nothing.
+值得注意的是,这种构建 Terminal 包的方式无法利用 Visual Studio 的 FastUpToDate 检查,所以整个包的构建会明显变慢,因为 cppwinrt 在确认"已是最新、啥也不用干"之前要做大量工作。
 
 
-### Are you seeing `DEP0700: Registration of the app failed`?
+### 看到 `DEP0700: Registration of the app failed` 了吗?
 
-Once in a blue moon, I get a `DEP0700: Registration of the app failed.
+偶尔,我在 VS 中部署时会遇到 `DEP0700: Registration of the app failed.
 [0x80073CF6] error 0x80070020: Windows cannot register the package because of an
-internal error or low memory.` when trying to deploy in VS. For us, that can
-happen if the `OpenConsoleProxy.dll` gets locked up, in use by some other
-terminal package.
+internal error or low memory.`。对我们来说,这可能是因为 `OpenConsoleProxy.dll`
+被锁住,正被某个其他终端包使用。
 
-Doing the equivalent command in powershell can give us more info:
+在 PowerShell 中执行等效命令可以获得更多信息:
 
 ```pwsh
 Add-AppxPackage -register "Z:\dev\public\OpenConsole\src\cascadia\CascadiaPackage\bin\x64\Debug\AppX\AppxManifest.xml"
 ```
 
-That'll suggest `NOTE: For additional information, look for [ActivityId]
+它会提示 `NOTE: For additional information, look for [ActivityId]
 dbf551f1-83d0-0007-43e7-9cded083da01 in the Event Log or use the command line
-Get-AppPackageLog -ActivityID dbf551f1-83d0-0007-43e7-9cded083da01`. So do that:
+Get-AppPackageLog -ActivityID dbf551f1-83d0-0007-43e7-9cded083da01`。那就照做:
 
 ```pwsh
 Get-AppPackageLog -ActivityID dbf551f1-83d0-0007-43e7-9cded083da01
 ```
 
-which will give you a lot of info. In my case, that revealed that the platform
-couldn't delete the packaged com entries. The key line was: `AppX Deployment
+这会给你一大堆信息。在我的例子里,它揭示平台无法删除打包的 COM 注册项。关键行是:`AppX Deployment
 operation failed with error 0x0 from API Logging data because access was denied
 for file:
 C:\ProgramData\Microsoft\Windows\AppRepository\Packages\WindowsTerminalDev_0.0.1.0_x64__8wekyb3d8bbwe,
 user SID: S-1-5-18`
 
-Take that path, and
+拿着这个路径执行:
 ```pwsh
 sudo start C:\ProgramData\Microsoft\Windows\AppRepository\Packages\WindowsTerminalDev_0.0.1.0_x64__8wekyb3d8bbwe
 ```
 
-(use `sudo`, since the path is otherwise locked down). From there, go into the
-`PackagedCom` folder, and open [File
+(要用 `sudo`,否则路径被锁死)。进入 `PackagedCom` 文件夹,对
+`OpenConsoleProxy.dll` 打开[File
 Locksmith](https://learn.microsoft.com/en-us/windows/powertoys/file-locksmith)
-(or Process Explorer, if you're more familiar with that) on
-`OpenConsoleProxy.dll`. Just go ahead and immediately re-launch it as admin,
-too. That should list off a couple terminal processes that are just hanging
-around. Go ahead and end them all. You should be good to deploy again after
-that.
+(如果你更熟悉 Process Explorer 也行)。直接立刻以管理员身份重新启动它。
+它会列出几个一直挂着的终端进程,把他们都结束掉。之后你应该就能正常部署了。
