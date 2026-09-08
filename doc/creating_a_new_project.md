@@ -1,10 +1,12 @@
-# Creating a New Project
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-## Creating a new WinRT Component DLL and referencing it in another project
+# 创建新项目
 
-When creating a new DLL, it was really helpful to reference an existing DLL's `.vcxproj` like `TerminalControl.vcxproj`. While you should mostly try to copy what the existing `.vcxproj` has, here's a handful of things to double check for as you go along.
+## 创建新的 WinRT 组件 DLL 并在其他项目中引用它
 
-- [ ] Make sure to `<Import>` our pre props at the _top_ of the vcxproj, and our post props at the _bottom_ of the vcxproj.
+创建新 DLL 时,参考现有 DLL 的 `.vcxproj`(如 `TerminalControl.vcxproj`)非常有帮助。虽然你大体上应该照抄现有 `.vcxproj` 的内容,但过程中有几件事需要反复确认。
+
+- [ ] 确保在 vcxproj 的_顶部_ `<Import>` 我们的 pre props,在_底部_引入 post props。
 ```
 <!-- pre props -->
 <Import Project="..\..\..\common.openconsole.props" Condition="'$(OpenConsoleDir)'==''" />
@@ -15,8 +17,8 @@ When creating a new DLL, it was really helpful to reference an existing DLL's `.
 <!-- post props -->
 <Import Project="$(OpenConsoleDir)src\cppwinrt.build.post.props" />
 ```
-- [ ] Add a `<ProjectReference>` to your new `.vcxproj` in both `WindowsTerminal.vcxproj` and `TerminalApp.vcxproj`
-- [ ] Add a `<Reference>` to `TerminalAppLib.vcxproj` similar to this:
+- [ ] 在 `WindowsTerminal.vcxproj` 和 `TerminalApp.vcxproj` 中都为你的新 `.vcxproj` 添加 `<ProjectReference>`
+- [ ] 在 `TerminalAppLib.vcxproj` 中添加类似这样的 `<Reference>`:
 ```
     <Reference Include="Microsoft.Terminal.NewDLL">
       <HintPath>$(OpenConsoleCommonOutDir)\TerminalNewDLL\Microsoft.Terminal.NewDLL.winmd</HintPath>
@@ -25,21 +27,21 @@ When creating a new DLL, it was really helpful to reference an existing DLL's `.
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
     </Reference>
 ```
-- [ ] Make sure the project has a `.def` file with the following lines. The `WINRT_GetActivationFactory` part is important to expose the new DLL's activation factory so that other projects can successfully call the DLL's `GetActivationFactory` to get the DLL's classes.
+- [ ] 确保项目带有包含以下内容的 `.def` 文件。`WINRT_GetActivationFactory` 这一段很重要,它对外暴露新 DLL 的激活工厂,让其他项目能成功调用该 DLL 的 `GetActivationFactory` 来获取 DLL 中的类。
 ```
 EXPORTS
 DllCanUnloadNow = WINRT_CanUnloadNow                    PRIVATE
 DllGetActivationFactory = WINRT_GetActivationFactory    PRIVATE
 ```
-- For a bit more context on this whole process, the `AppXManifest.xml` file defines which classes belong to which DLLs. If your project wants class `X.Y.Z`, it can look it up in the manifest's definitions and see that it came from `X.Y.dll`. Then it'll load up the DLL, and call a particular function called `GetActivationFactory(L"X.Y.Z")` to get the class it wants. So, the definitions in `AppXManifest` are _required_ for this activation to work properly, and I found myself double checking the file to see that the definitions I expect are there.
-- _Note_: If your new library eventually rolls up as a reference to our Centennial Packaging project `CascadiaPackage`, you don't have to worry about manually adding your definitions to the `AppXManifest.xml` because the Centennial Packaging project automatically enumerates the reference tree of WinMDs and stitches that information into the `AppXManifest.xml`. However, if your new project does _not_ ultimately roll up to a packaging project that will automatically put the references into `AppXManifest`, you will have to add them in manually.
+- 关于整个流程再多说一点背景:`AppXManifest.xml` 文件定义了哪些类属于哪些 DLL。如果你的项目想要类 `X.Y.Z`,它可以在清单定义中查到该类来自 `X.Y.dll`,然后加载该 DLL,并调用名为 `GetActivationFactory(L"X.Y.Z")` 的特定函数来拿到想要的类。因此,`AppXManifest` 中的定义是激活正常工作的_必要条件_,我经常需要反复检查该文件,确认预期的定义都在。
+- _注_:如果你的新库最终作为对我们 Centennial 打包项目 `CascadiaPackage` 的引用汇总进去,你不必手动把定义加进 `AppXManifest.xml`,因为 Centennial 打包项目会自动枚举 WinMD 引用树并把信息拼进 `AppXManifest.xml`。但如果你的新项目_不会_最终汇总到自动把引用写入 `AppXManifest` 的打包项目,你就得手动添加。
 
-### Troubleshooting
-- If you hit an error that looks like this:
+### 故障排查
+- 如果你遇到这样的错误:
     ```
     X found processing metadata file ..\blah1\Microsoft.UI.Xaml.winmd, type already exists in file ..\blah\NewDLLProject\Microsoft.UI.Xaml.winmd.
     ```
-    The `Microsoft.UI.Xaml.winmd` is showing up in the output folder when it shouldn't. Try adding this block at the top of your `.vcxproj`
+    说明 `Microsoft.UI.Xaml.winmd` 不该出现在输出文件夹里却出现了。试着在 `.vcxproj` 顶部加上这个块:
     ```
     <ItemDefinitionGroup>
     <Reference>
@@ -47,8 +49,8 @@ DllGetActivationFactory = WINRT_GetActivationFactory    PRIVATE
     </Reference>
     </ItemDefinitionGroup>
     ```
-    This will make all references non-private, meaning "don't copy it into my folder" by default.
+    这会让所有引用默认变为非私有,意思是"别拷贝到我的文件夹里"。
 
-- If you hit a `Class not Registered` error, this might be because a class isn't getting registered in the app manifest. You can go check `src/cascadia/CascadiaPackage/bin/x64/Debug/AppX/AppXManifest.xml` to see if there exist entries to the classes of your newly created DLL. If the references aren't there, double check that you've added `<ProjectReference>` blocks to both `WindowsTerminal.vcxproj` and `TerminalApp.vcxproj`.
+- 如果你遇到 `Class not Registered` 错误,可能是某个类没有在应用清单中注册。可以去检查 `src/cascadia/CascadiaPackage/bin/x64/Debug/AppX/AppXManifest.xml`,看是否存在指向你新建 DLL 各类的条目。如果引用不在,请再次确认你已向 `WindowsTerminal.vcxproj` 和 `TerminalApp.vcxproj` 都添加了 `<ProjectReference>` 块。
 
-- If you hit an extremely vague error along the lines of `Error in the DLL`, and right before that line you notice that your new DLL is loaded and unloaded right after each other, double check that your new DLL's definitions show up in the `AppXManifest.xml` file. If your new DLL is included as a reference to a project that rolls up to `CascadiaPackage`, double check that you've created a `.def` file for the project. Otherwise, if your new project _does not_ roll up to a package that populates the `AppXManifest` references for you, you'll have to add those references yourself.
+- 如果你遇到类似 `Error in the DLL` 这种极其含糊的错误,并且在该行之前注意到新 DLL 刚被加载就立刻被卸载,请再次确认新 DLL 的定义出现在 `AppXManifest.xml` 中。如果你的新 DLL 是作为汇总到 `CascadiaPackage` 的项目的引用被包含进来,请再次确认你为该项目创建了 `.def` 文件。否则,如果你的新项目_不会_汇总到会为你填充 `AppXManifest` 引用的包,你就得自己添加这些引用。

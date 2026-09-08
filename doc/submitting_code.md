@@ -1,26 +1,27 @@
+> 🌐 本文档由 [microsoft/terminal](https://github.com/microsoft/terminal) 翻译,英文原版见原项目。
 
-# Branches in Openconsole
+# OpenConsole 的分支
 
-In OpenConsole, `dev/main` is the primary branch for the repo.
+在 OpenConsole 中,`dev/main` 是仓库的主分支。
 
-Any branch that begins with `dev/` is recognized by our CI system and will automatically run x86 and amd64 builds and run our unit and feature tests. For feature branches the pattern we use is `dev/<alias>/<whatever you want here>`. ex. `dev/austdi/SomeCoolUnicodeFeature`. The important parts are the dev prefix and your alias.
+任何以 `dev/` 开头的分支都会被我们的 CI 系统识别,并自动运行 x86 和 amd64 构建,以及单元测试和功能测试。功能分支的命名模式是 `dev/<别名>/<随便你写什么>`,例如 `dev/austdi/SomeCoolUnicodeFeature`。关键是 dev 前缀和你的别名。
 
-`inbox` is a special branch that coordinates OpenConsole code to the main OS repo.
+`inbox` 是一个特殊分支,用于把 OpenConsole 代码协调进主 OS 仓库。
 
-The code will be checked into the OS repo at `/onecore/windows/core/console/open`. It would be prudent to make sure that directory builds in razzle with your submitted changes.
+代码会被检入 OS 仓库的 `/onecore/windows/core/console/open`。谨慎起见,请确保你提交的修改能在 razzle 中构建该目录。
 
-# Code Submission Process
+# 代码提交流程
 
-Because we build outside of the OS repo, we need a way to get code back into it once it's been merged into `dev/main`. This is done by cherry-picking the PR to the `inbox` branch once it has been merged (and preferably squashed) into `dev/main`. We have a tool called Git2Git that listens for new merges into `inbox` and replicates the commits over to the OS repo. Feel free to approve and complete the `inbox` PR yourself. About a minute after the `inbox` PR is submitted, Git2Git will create a PR in the OS repo under the alias `miniksa`. It will automatically target the OS branch we're using at the time, it just needs you to go approve and complete it. Once that merge is completed it is a good idea to build the OS branch with the new code in it to make sure that the PR won't be the cause of a build break that evening.
+因为我们在 OS 仓库之外构建,所以需要一种方式把合并进 `dev/main` 的代码送回 OS 仓库。做法是:PR 合并(最好已 squash)进 `dev/main` 后,将其 cherry-pick 到 `inbox` 分支。我们有一个叫 Git2Git 的工具,它监听 `inbox` 的新合并,并把提交复制到 OS 仓库。你可以自己批准并完成 `inbox` 的 PR。`inbox` PR 提交大约一分钟后,Git2Git 会在 OS 仓库以别名 `miniksa` 创建一个 PR。它会自动指向我们当时使用的 OS 分支,只需要你去批准并完成它。该合并完成后,最好用新代码构建一次 OS 分支,确保这个 PR 不会成为当晚构建失败的元凶。
 
-## What to do when cherry-picking to inbox fails
+## cherry-pick 到 inbox 失败时怎么办
 
-Sometimes VSTS doesn't want to allow a cherry pick to the inbox branch. It might have a valid reason, or it might just be finicky. You'll need to complete the merge manually on a local machine. The steps are:
+有时 VSTS 不允许 cherry-pick 到 inbox 分支。它可能有正当理由,也可能只是闹脾气。你需要在本地机器上手动完成合并。步骤如下:
 
-1. make sure you have pulled the latest commits for the `dev/main` and `inbox` branches
-2. make a new branch from inbox
-3. cherry-pick the commits from the PR to the newly created branch (this is easier if you squashed your commits when you merged into `dev/main`
-4. fix any merge conflicts and commit
-5. push the new branch to the remote
-6. create a new PR of that branch in `inbox`
-7. complete PR and continue on to completing the auto-created PR in the OS repo
+1. 确保你已拉取 `dev/main` 和 `inbox` 分支的最新提交
+2. 从 inbox 新建一个分支
+3. 把 PR 中的提交 cherry-pick 到新分支(如果你合并进 `dev/main` 时做了 squash,这一步会容易得多)
+4. 解决所有合并冲突并提交
+5. 把新分支推送到远端
+6. 用该分支在 `inbox` 新建一个 PR
+7. 完成 PR,然后继续完成 OS 仓库中自动创建的 PR
